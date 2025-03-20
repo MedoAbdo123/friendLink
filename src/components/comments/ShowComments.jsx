@@ -34,7 +34,7 @@ function ShowComments({ postId }) {
   }, [postId]);
 
   return (
-    <div className="text-white">
+    <div className="text-red-500">
       <div className="flex flex-col">
         {comments.length === 0 ? (
           <p>لا يوجد تعليقات</p>

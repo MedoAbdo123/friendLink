@@ -3,7 +3,6 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -51,8 +50,10 @@
 }
 
 .app-comment {
+  padding-top: 33px;
   overflow-y: scroll;
   height: 290px;
+  margin: 10px;
 }
 
 .app-comment::-webkit-scrollbar-thumb {
