@@ -1,66 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 
+@theme{
+    --font-Roboto: 'Roboto', 'sans-serif';
+}
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  text-align: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: Roboto;
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+    height: 6em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: filter 300ms;
 }
 
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+    filter: drop-shadow(0 0 2em #646cffaa);
 }
 
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+    filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
 @keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
 
-  to {
-    transform: rotate(360deg);
-  }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+    a:nth-of-type(2) .logo {
+        animation: logo-spin infinite 20s linear;
+    }
 }
 
 .card {
-  padding: 2em;
+    padding: 2em;
 }
 
 .read-the-docs {
-  color: #888;
+    color: #888;
 }
 
 .body-content {
-  transform: translate(6px, -23px);
+    transform: translate(6px, -23px);
 }
 
 .app-comment {
-  padding-top: 33px;
-  overflow-y: scroll;
-  height: 290px;
-  margin: 10px;
+    padding-top: 33px;
+    overflow-y: scroll;
+    height: 290px;
+    margin: 10px;
 }
 
 .app-comment::-webkit-scrollbar-thumb {
-  background-color: rgb(50, 49, 66);
+    background-color: rgb(50, 49, 66);
 }
 
 .app-comment::-webkit-scrollbar {
-  border-radius: 9px;
-  width: 6px;
+    border-radius: 9px;
+    width: 6px;
 }

@@ -4,10 +4,13 @@ import Home from "./components/Home";
 import Auth from "./components/auth/Auth";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
-import Profile from "./components/user/Profile";
-import Navbar from "./components/Navbar";
-
+import MyProfile from "./components/user/MyProfile";
+import UserProfile from "./components/user/UserProfile";
+import FriendRequests from "./components/Friends/FriendRequests";
+import CreatePost from "./posts/CreatePost";
+import EditPost from "./posts/EditPost";
 function App() {
+
   return (
     <div>
       <BrowserRouter>
@@ -18,7 +21,11 @@ function App() {
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
           </Route>
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/myProfile" element={<MyProfile/>}/>
+          <Route path="/:userId" element={<UserProfile/>}/>
+          <Route path="/friendRequests" element={<FriendRequests/>}/>
+          <Route path="/createPost" element={<CreatePost/>}/>
+          <Route path="/editPost/:postId" element={<EditPost/>}/>
         </Routes>
       </BrowserRouter>
     </div>

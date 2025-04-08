@@ -1,12 +1,11 @@
 import { jwtDecode } from "jwt-decode";
-import React from "react";
 
-function EditProfile() {
+function EditProfile({ onClose }) {
   const token = localStorage.getItem("token");
   const decode = jwtDecode(token);
   return (
     <div>
-     <div className="flex text-black justify-center w-full h-screen items-center ">
+      <div className="flex text-black justify-center w-full h-screen items-center ">
         <div className="flex flex-col w-full max-w-md min-w-[700px]:w-[200px] h-auto bg-white absolute rounded-lg p-5">
           <h1 className="font-bold text-start text-xl mt-3 ml-5">
             Edit Profile
@@ -40,10 +39,11 @@ function EditProfile() {
               className="w-[99%] rounded-[5px] border-1 border-gray-400 p-2 px-5 focus:outline-none focus:border-2 mb-5"
               placeholder="username"
             />
-            <h1 className="text-xl">Bip</h1>
+            <h1 className="text-xl">Bio</h1>
             <textarea
               className="bg-blue-100 h-[100%] rounded-lg outline-none border-1 border-gray-400 focus:border-2 focus:border-gray-400 p-4"
               placeholder="Describe yourself"
+              maxLength={160}
             ></textarea>
           </div>
           <div>
@@ -52,7 +52,7 @@ function EditProfile() {
             </button>
           </div>
 
-          <button>
+          <button onClick={onClose}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="24px"

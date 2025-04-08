@@ -4,38 +4,41 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
+
+    const formData = { email, password };
 
     try {
       const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // ضروري عند إرسال JSON
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+        body: JSON.stringify(formData),
       });
+
       const json = await response.json();
-      console.log("Response JSON:", json); 
-      localStorage.setItem("token", json.token);
-      console.log(json.token);
+      console.log("Response JSON:", json);
+
+      if (response.ok) {
+        localStorage.setItem("token", json.token);
+        console.log("Token:", json.token);
+        navigate("/");
+      } else {
+        console.error("Login failed", json.message);
+      }
     } catch (error) {
-      console.log("Error", error);
+      console.log("Error:", error);
     }
-    navigate("/")
-  }
+  };
+
   return (
-    <div>
-      <div className="mt-[50px] flex flex-col items-center w-full">
-        <div className="relative w-[80%] sm:w-[80%] lg:w-[80%] mb-4">
+    <div className="mt-[50px] flex flex-col items-center w-full">
+      <form onSubmit={handleSubmit} className="w-[80%] sm:w-[80%] lg:w-[80%]">
+        <div className="relative mb-4">
           <input
             type="email"
             required
@@ -56,7 +59,7 @@ function Login() {
           </svg>
         </div>
 
-        <div className="relative w-[80%] sm:w-[80%] lg:w-[80%]">
+        <div className="relative mb-4">
           <input
             type="password"
             required
@@ -76,13 +79,14 @@ function Login() {
             <path d="M160-440q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM80-200v-80h800v80H80Zm400-240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm320 0q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Z" />
           </svg>
         </div>
+
         <button
-          onClick={handleSubmit}
+          type="submit"
           className="m-10 bg-green-500 w-[80%] sm:w-[80%] lg:w-[80%] p-2 rounded-xl font-bold text-xl transition-all hover:bg-green-600 hover:cursor-pointer"
         >
           Login
         </button>
-      </div>
+      </form>
     </div>
   );
 }

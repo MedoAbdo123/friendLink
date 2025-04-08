@@ -44,7 +44,7 @@ function Register() {
       <div className="mt-[30px] flex flex-col items-center w-full">
         <label className="h-[90px] items-center flex  justify-center rounded-full w-[90px]  mb-4  bg-cyan-700">
           {preview && (
-            <img src={preview} className="rounded-full w-full h-[100%]" />
+            <img src={preview} className="rounded-full w-[9999999%] h-[100%]" />
           )}
           <input onChange={handleImageChange} type="file" hidden />
           <svg

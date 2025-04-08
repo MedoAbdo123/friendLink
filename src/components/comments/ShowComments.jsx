@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function ShowComments({ postId }) {
+function ShowComments({ postId, refreshComments }) {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
@@ -14,10 +14,8 @@ function ShowComments({ postId }) {
         }
 
         const json = await response.json();
-        console.log("Response JSON:", json);
-
         if (json.comments && Array.isArray(json.comments)) {
-          setComments(json.comments); // ✅ الحل الصحيح
+          setComments(json.comments);
         } else {
           console.error("json.comments is not an array:", json.comments);
           setComments([]);
@@ -31,7 +29,7 @@ function ShowComments({ postId }) {
     if (postId) {
       fetchComments();
     }
-  }, [postId]);
+  }, [postId, refreshComments]);
 
   return (
     <div className="text-red-500">

@@ -2,11 +2,32 @@ import { useEffect, useState } from "react";
 import ShowComments from "./comments/ShowComments";
 import { LuSend } from "react-icons/lu";
 import Navbar from "./Navbar";
+import { Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import { MdDelete } from "react-icons/md";
+import { RiEditBoxFill } from "react-icons/ri";
+import DeletePost from "../posts/DeletePost";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Home() {
   const [posts, setPosts] = useState([]);
   const [activePost, SetActivePost] = useState(null);
+  const [showAlert, setShowAlert] = useState(false)
+  const [postToDelete, setPostToDelete] = useState(null);
+  const [comment, setComment] = useState("")
+  const [refreshComments, setRefreshComments] = useState(false);
 
+  const token = localStorage.getItem("token")
+  let decode = null;
+
+
+  if (token) {
+    try {
+      decode = jwtDecode(token);
+    } catch (error) {
+      console.error("Invalid token:", error);
+    }
+  }
   useEffect(() => {
     async function fetchData() {
       try {
@@ -27,35 +48,93 @@ function Home() {
     fetchData();
   }, []);
 
+  async function addComment(postId) {
+    const response = await fetch(`http://localhost:3000/comments/addComment/${postId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ text: comment })
+    });
+
+    if (response.ok) {
+      setComment("");
+      setRefreshComments(prev => !prev);
+    } else {
+      console.error("Failed to add comment");
+    }
+  }
+
 
   return (
     <div className="text-start">
       <Navbar />
+      {showAlert && (
+        <AnimatePresence>
+          <motion.div
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 1 }}
+            transition={{ duration: .8, ease: "easeOut" }}
+            className="fixed flex justify-center w-full z-50"
+          >
+            <div className="relative">
+              <DeletePost postId={postToDelete} onClose={() => setShowAlert(false)} />
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      )}
       <div className="flex justify-center items-center flex-col p-4">
         {posts.map((post) => (
           <div
             post-id={post._id}
             key={post._id}
-            className="bg-amber-100 max-w-[800px]  w-full mt-12 rounded-2xl flex flex-col p-4"
+            className="bg-amber-100 relative max-w-[800px] w-full mt-12 rounded-2xl flex flex-col p-4 group"
           >
+            {decode && post.userId == decode.id && (
+              <button
+                onClick={() => {
+                  setPostToDelete(post._id);
+                  setShowAlert(true);
+                }}
+                className="absolute bottom-4 right-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-[.3rem] hidden group-hover:block transition duration-300"
+              >
+                <MdDelete />
+              </button>
+
+            )} {decode && post.userId == decode.id && (
+              <Link to={`editPost/${post._id}`}>
+                <button
+                  className="absolute bottom-4 right-18 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-[.3rem] hidden group-hover:block transition duration-300"
+                >
+                  <RiEditBoxFill />
+                </button>
+              </Link>
+            )}
             <div className="flex justify-end items-center">
-              <h3 className="text-black text-start mr-4 font-bold hover:cursor-pointer">
-                {post.username}
-              </h3>
+              <Link to={decode && post.userId == decode.id ? "/myProfile" : `/${post.userId}`}>
+                <h3 className="text-black text-start mr-4 font-bold hover:cursor-pointer hover:underline">
+                  {post.username}
+                </h3>
+              </Link>
               <img src={post.profile} className="w-10 h-10 rounded-full" />
             </div>
 
-            <div className="text-black ml-3 w-full text-wrap flex flex-col">
+            <div className="text-black ml-3 font-bold w-full text-wrap flex flex-col">
               <h3 className="text-wrap ">{post.title}</h3>
               <hr className="my-2" />
               <h4>{post.body}</h4>
             </div>
-            {post.image && (
-              <img
-                src={post.image}
-                className="mt-5 p-2 max-w-full rounded-lg"
-                alt="Post"
-              />
+            {post.image && post.image !== "" && (
+              <div className="mt-5 p-2 max-w-full rounded-lg">
+                <img
+                  src={post.image}
+                  className="w-[100%] rounded-lg object-contain max-h-180"
+                  alt="Post"
+                  onError={(e) => (e.target.style.display = "none")}
+                />
+              </div>
             )}
 
             <div className="flex justify-center text-black">
@@ -74,10 +153,10 @@ function Home() {
               <span className="mt-5">{post.__v}</span>
             </div>
             {activePost === post._id && (
-              <div className="fixed inset-0 flex justify-center items-center">
-                <div className="bg-white w-full app-comment min-h-[90%] max-w-[90%] flex p-5 rounded-lg shadow-lg flex-col items-center relative">
+              <div className="fixed inset-0 flex justify-center items-center z-50">
+                <div className="bg-white min-w-full min-h-[100%] app-comment sm:min-h-[90%] sm:min-w-[80%] flex p-5 rounded-lg shadow-lg flex-col items-center relative">
                   <button
-                    className="absolute top-1 right-1 text-black px-3 py-1 rounded-md"
+                    className="absolute top-1 right-1 text-black px-3 py-1 rounded-md text-4xl"
                     onClick={() => SetActivePost(null)}
                   >
                     ×
@@ -85,19 +164,30 @@ function Home() {
 
                   <div className="w-full flex flex-col h-full">
                     <div className="flex-grow overflow-y-auto p-4 pb-16">
-                      <ShowComments postId={post._id} />
+                      <ShowComments postId={post._id} refreshComments={refreshComments} />
                     </div>
-                    <div className="bg-gray-200 w-full flex items-center px-1 py-3 absolute bottom-0 left-0">
+                    <div className="bg-gray-200 w-full  flex items-center px-1 py-3 absolute bottom-0 left-0">
                       <input
                         type="text"
                         className="w-full outline-gray-700 border-2 border-gray-500 p-3 bg-transparent text-black rounded-lg flex-grow break-words whitespace-pre-wrap"
                         placeholder="Add Comment..."
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            addComment(post._id, e);
+                          }
+                        }}
                       />
-                      <button className="bg-blue-500 text-white px-4 py-2 rounded-md ml-2 flex items-center gap-2">
+                      <button
+                        onClick={() => addComment(post._id)}
+                        className="bg-blue-500 hover:bg-blue-600 hover:cursor-pointer transition-all text-white px-4 py-2 rounded-md ml-2 flex items-center gap-2"
+                      >
                         <span>
                           <LuSend />
                         </span>
-                        Sendz
+                        Send
                       </button>
                     </div>
                   </div>

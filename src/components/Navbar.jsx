@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { CgProfile } from "react-icons/cg";
+import { HiUsers } from "react-icons/hi2";
+import { BsFilePost } from "react-icons/bs";
+
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const token = localStorage.getItem("token");
@@ -31,14 +35,6 @@ function Navbar() {
             <nav aria-label="Global" className="hidden md:block">
               <ul className="links h-full flex items-center gap-6 text-sm">
                 <li>
-                  <Link
-                    className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
-                    to="profile"
-                  >
-                    Profile
-                  </Link>
-                </li>
-                <li>
                   <a
                     className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
                     href="#"
@@ -63,20 +59,35 @@ function Navbar() {
                   </a>
                 </li>
                 <li>
-                  <a
-                    className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
-                    href="#"
+                  <Link
+                    className="text-gray-500 transition hover:text-gray-500/75 dark:text-white flex items-center dark:hover:text-white/75"
+                    to={"createPost"}
                   >
-                    Projects
-                  </a>
+                    Add post
+                    <BsFilePost className="ml-1 text-lg"/>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
-                    href="#"
+                  <Link
+                    className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75 flex items-center"
+                    to="friendRequests"
                   >
-                    Blog
-                  </a>
+                    Friend requests
+                    <span>
+                      <HiUsers className="text-lg ml-1" />
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className="text-gray-500  flex transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
+                    to="myProfile"
+                  >
+                    Profile
+                    <span>
+                      <CgProfile className="text-lg ml-1" />
+                    </span>
+                  </Link>
                 </li>
               </ul>
             </nav>
@@ -91,6 +102,7 @@ function Navbar() {
                     >
                       Login
                     </Link>
+
                     <Link
                       className="hidden rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600 transition hover:text-teal-600/75 sm:block dark:bg-gray-800 dark:text-white dark:hover:text-white/75"
                       to="/auth/register"
@@ -111,7 +123,6 @@ function Navbar() {
                 )}
               </div>
 
-              {/* زر القائمة للهواتف */}
               <button
                 className="block rounded-sm bg-gray-100 p-2.5 text-gray-600 transition hover:text-gray-600/75 md:hidden dark:bg-gray-800 dark:text-white dark:hover:text-white/75"
                 onClick={() => setIsOpen(true)}
@@ -145,9 +156,8 @@ function Navbar() {
       )}
 
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white dark:bg-gray-900 shadow-lg z-50 transform transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-full w-64 bg-white dark:bg-gray-900 shadow-lg z-50 transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <button
           className="p-4 text-gray-600 transition-all hover:text-red-500"
@@ -158,19 +168,32 @@ function Navbar() {
         <nav className="px-4 py-2">
           <ul className="space-y-4">
             <li>
-              <Link className="text-gray-700 dark:text-gray-300" to="profile">
+              <Link className="text-gray-700 items-center flex dark:text-gray-300" to="myProfile">
                 Profile
+                <span>
+                  <CgProfile className="text-lg ml-1" />
+                </span>
               </Link>
             </li>
             <li>
-              <a className="text-gray-700 dark:text-gray-300" href="#">
-                Careers
-              </a>
+              <Link
+                className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75 flex items-center"
+                to="friendRequests"
+              >
+                Friend requests
+                <span>
+                  <HiUsers className="text-lg ml-1" />
+                </span>
+              </Link>
             </li>
             <li>
-              <a className="text-gray-700 dark:text-gray-300" href="#">
-                History
-              </a>
+              <Link
+                className="text-gray-500 transition flex items-center hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
+                to={"createPost"}
+              >
+                Add post
+                <BsFilePost className="ml-1" />
+              </Link>
             </li>
             <li>
               <a className="text-gray-700 dark:text-gray-300" href="#">
